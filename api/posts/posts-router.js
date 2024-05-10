@@ -11,7 +11,8 @@ router.get('/', (req, res) => {
         })
         .catch(err => {
             res.status(500).json({
-                message: "The posts information could not be retrieved"
+                message: "The posts information could not be retrieved",
+                error: err.message
             })
         })
 });
@@ -29,9 +30,40 @@ router.get('/:id', (req, res) => {
         })
         .catch(err => {
             res.status(500).json({
-                message: "The post information could not be retrieved"
+                message: "The post information could not be retrieved",
+                error: err.message
             })
         })
-})
+});
+
+router.post('/', (req, res) => {
+    const { title, contents } = req.body;
+
+    if (!title || !contents) {
+        return res.status(400).json({
+            message: "Please provide title and contents for the post"
+        })
+    }
+
+    Posts.insert({ title, contents })
+        .then(post => {
+            return Posts.findById(post.id)
+        })
+        .then(newPost => {
+            if (newPost) {
+                res.status(201).json(newPost)
+            } else {
+                res.status(404).json({
+                    message: "The newly created post could not be found"
+                })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({
+                message: "There was an error while saving the post to the database",
+                error: err.message
+            })
+        })
+});
 
 module.exports = router
