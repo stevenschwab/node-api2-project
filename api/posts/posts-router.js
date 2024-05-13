@@ -140,7 +140,6 @@ router.get('/:id/comments', (req, res) => {
                     message: "The post with the specified ID does not exist"
                 });
                 return;
-                
             }
             return Posts.findPostComments(id);
         })
