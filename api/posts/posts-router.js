@@ -46,8 +46,8 @@ router.post('/', (req, res) => {
     }
 
     Posts.insert({ title, contents })
-        .then(post => {
-            return Posts.findById(post.id)
+        .then(({ id }) => {
+            return Posts.findById(id)
         })
         .then(newPost => {
             if (newPost) {
